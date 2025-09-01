@@ -1,4 +1,4 @@
-(function($) {
+il (function($) {
 
 	/**
 	 * Generate an indented list of links from a nav. Meant for use with panel().
@@ -597,7 +597,7 @@ $(document).ready(function() {
                 alert("Email sent successfully!");
             }, function(error) {
                 console.error("EmailJS Error:", error);
-                alert("Failed to send email. Please check your input and try again.");
+                alert("Failed to send email. Please check your email is valid, and you have filled every box correctly");
             });
     });
 
@@ -605,4 +605,5 @@ $(document).ready(function() {
     $('form').on('submit', function(event) {
         event.preventDefault(); // Prevent the form from submitting to the server
     });
+
 });
