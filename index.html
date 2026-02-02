@@ -1,185 +1,194 @@
-<html>
-	<head>
-		<title>Sophie & Dan</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-		<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-	</head>
-	<body class="is-preload">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Top X% vs Everything Over X%</title>
+<style>
+  body {
+    font-family: sans-serif;
+    margin: 20px;
+  }
+  .container {
+    display: flex;
+    gap: 40px;
+  }
+  .panel {
+    text-align: center;
+  }
+  svg {
+    border: 1px solid #ccc;
+    background: #fafafa;
+  }
+  .center {
+    fill: steelblue;
+  }
+  .point {
+    fill: black;
+    cursor: pointer;
+  }
+  .point.in-range {
+    fill: green;
+  }
+  .radius {
+    fill: none;
+    stroke: steelblue;
+    stroke-dasharray: 5,5;
+    stroke-width: 2;
+  }
+  .ring {
+    fill: none;
+    stroke: #ccc;
+    stroke-dasharray: 2,4;
+    stroke-width: 1;
+  }
+  .link {
+    stroke: steelblue;
+    stroke-width: 1.5;
+  }
+  .label {
+    font-weight: bold;
+    margin-bottom: 6px;
+  }
+</style>
+</head>
+<body>
 
-		<!-- Wrapper -->
-			<div id="wrapper" class="fade-in">
+<h2>Fishing Net vs Fishing line</h2>
 
-				<!-- Intro -->
-					<div id="intro">
-						<h1>Sophie & Dan<br />
-						27/7/27</h1>
-						<p>You are codially invited to spend the day with us<br />
-						at chateau rhianfa, Anglesey</p>
-						<ul class="actions">
-							<li><a href="#header" class="button icon solid solo fa-arrow-down scrolly">Continue</a></li>
-						</ul>
-					</div>
+<label>
+  X (%):
+  <input type="range" id="slider" min="0" max="100" value="0">
+  <span id="xval">50</span>
+</label>
 
-				<!-- Header -->
-					<header id="header">
-						<a href="index.html" class="logo">RSPV</a>
-					</header>
+<div class="container">
+  <div class="panel">
+    <div class="label">Net</div>
+    <svg id="visA" width="400" height="400"></svg>
+  </div>
 
-				<!-- Nav -->
-					<nav id="nav">
-						<ul class="links">
-							<li class="active"><a href="index.html">Important Info</a></li>
-							<li><a href="generic.html">Our Story</a></li>
-							<li><a href="elements.html">Song Requests</a></li>
-						</ul>
-					</nav>
+  <div class="panel">
+    <div class="label">Line</div>
+    <svg id="visB" width="400" height="400"></svg>
+  </div>
+</div>
 
-				<!-- Main -->
-					<div id="main">
+<script>
+const width = 400;
+const height = 400;
+const center = { x: width / 2, y: height / 2 };
+const maxRadius = 180;
 
-						<!-- Featured Post -->
-							<article class="post featured">
-								<header class="major">
-									<span class="date">27th July, 2027</span>
-									<h2>The Big Day</h2>
-									<p>On the 27th of July, Dan and Sophie will be tying the knot at chateau rhianfa <br />
-									just across the straight from where they met, and fell in love. <br />
-									They would be honored if you would join them</p>
-								</header>
-								<a href="#" class="image main"><img src="images/background.jpg" alt="" /></a>
-								<ul class="actions special">
-									<li><a href="#" class="button large">Full Story</a></li>
-								</ul>
-							</article>
+let points = [];
+let draggingPoint = null;
 
-						<!-- Posts -->
-							<section class="posts">
-								<article>
-									<header>
-										<span class="date"></span>
-										<h2><a href="#">Rooms<br />
-										available</a></h2>
-									</header>
-									<a href="#" class="image fit"><img src="images/room.avif" alt="" /></a>
-									<p>As we are aware that most of you will have quite far to travel, we have reserved rooms for the night before and the night of the wedding, these work out to be about £400 per room for both nights, and most sleep 2.</p>
-									<ul class="actions special">
-										<li><a href="#" class="button">Available rooms</a></li>
-									</ul>
-								</article>
-								<article>
-									<header>
-										<span class="date"></span>
-										<h2><a href="#">Food<br />
-										is provided</a></h2>
-									</header>
-									<a href="#" class="image fit"><img src="images/dinner.jpg" alt="" /></a>
-									<p>Please let us know all dietary requirements asap, meat and vegetatian options will be available. Those with hotel rooms will be provided dinner and a drink the night of their arrival, and breakfast both mornings.</p>
-									<ul class="actions special">
-										<li><a href="#" class="button">Menu</a></li>
-									</ul>
-								</article>
-								<article>
-									<header>
-										<span class="date"></span>
-										<h2><a href="#">Drink<br />
-										</a></h2>
-									</header>
-									<a href="#" class="image fit"><img src="images/bar.avif" alt="" /></a>
-									<p>Though we will not be offering an open bar, complimentary prosecco wil be offered at various parts of the day, and complimentary wine will be offered at dinner.</p>
-									<ul class="actions special">
-										<li><a href="#" class="button">Drinks menu</a></li>
-									</ul>
-								</article>
-								<article>
-									<header>
-										<span class="date"></span>
-										<h2><a href="#">Registry</a></h2>
-									</header>
-									<a href="#" class="image fit"><img src="images/gift.webp" alt="" /></a>
-									<p>We have been living together for a number of years now, so don't need toasters, and ironing boards. we are also very concious of the expense most of you will go to to travel and stay, so there is zero expectation to bring anything, not even a card. Just yourselves and some dancing shoes.</p>
-									<ul class="actions special">
-										<li><a href="#" class="button">For those who still feel obliged</a></li>
-									</ul>
-								</article>
-							</section>
+const slider = document.getElementById("slider");
+const xval = document.getElementById("xval");
 
-						<!-- Footer -->
-							<footer>
-								
-							</footer>
+const svgA = document.getElementById("visA");
+const svgB = document.getElementById("visB");
 
-					</div>
+function distance(p) {
+  return Math.hypot(p.x - center.x, p.y - center.y);
+}
 
-				<!-- Footer -->
-					<footer id="footer">
-						<section>
-							<form method="post" action="#">
-								
-								<h1>RSPV</h1>
-								<div class="fields">
-									<div class="field">
-										<label for="name">Name(s)</label>
-										<input type="text" name="name" id="name" />
-									</div>
-									<div class="field">
-										<label for="email">Email</label>
-										<input type="text" name="email" id="email" />
-									</div>
-									<div class="field">
-										<label for="hotel">Hotel?</label>
-										<input type="text" name="hotel" id="hotel" />
-									</div>
-									<div class="field">
-										<label for="diet">Dietry requirements</label>
-										<input type="text" name="diet" id="diet" />
-									</div>
-									<div class="field">
-										<label for="message">Message</label>
-										<textarea name="message" id="message" rows="3"></textarea>
-									</div>
-								</div>
-								<ul class="actions">
-									<li><input id ="RSPV" type="submit" value="RSPV" /></li>
-								</ul>
-							</form>
-						</section>
-						<section class="split contact">
-							<section class="alt">
-								<h3>Venue Address</h3>
-								<p>Chateau Rhianfa, Beaumaris road,<br />
-								Menai Bridge, LL59 5NS</p>
-							</section>
-							<section>
-								<h3>Venue Phone</h3>
-								<p><a href="#">01238 880090</a></p>
-							</section>
-							<section>
-								<h3>Social</h3>
-								<ul class="icons alt">
-									<li><a href="#" class="icon brands alt fa-twitter"><span class="label">Twitter</span></a></li>
-									<li><a href="#" class="icon brands alt fa-facebook-f"><span class="label">Facebook</span></a></li>
-									<li><a href="#" class="icon brands alt fa-instagram"><span class="label">Instagram</span></a></li>
-									<li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
-								</ul>
-							</section>
-						</section>
-					</footer>
+function render() {
+  const x = +slider.value;
+  xval.textContent = x;
 
-			</div>
+  svgA.innerHTML = "";
+  svgB.innerHTML = "";
 
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrollex.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+  // --- LEFT: background rings every 10% ---
+  for (let i = 10; i <= 100; i += 10) {
+    const ring = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    ring.setAttribute("cx", center.x);
+    ring.setAttribute("cy", center.y);
+    ring.setAttribute("r", maxRadius * i / 100);
+    ring.setAttribute("class", "ring");
+    svgA.appendChild(ring);
+  }
 
-	</body>
+  // Centers
+  [svgA, svgB].forEach(svg => {
+    const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    c.setAttribute("cx", center.x);
+    c.setAttribute("cy", center.y);
+    c.setAttribute("r", 6);
+    c.setAttribute("class", "center");
+    svg.appendChild(c);
+  });
 
+  // --- LEFT: active radius ---
+  const radius = (maxRadius * x) / 100;
+  const radiusCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  radiusCircle.setAttribute("cx", center.x);
+  radiusCircle.setAttribute("cy", center.y);
+  radiusCircle.setAttribute("r", radius);
+  radiusCircle.setAttribute("class", "radius");
+  svgA.appendChild(radiusCircle);
+
+  points.forEach(p => {
+    const inRange = distance(p) <= radius;
+    svgA.appendChild(makePointCircle(p, inRange));
+  });
+
+  // --- RIGHT: Top X% closest ---
+  const sorted = [...points].sort((a, b) => distance(a) - distance(b));
+  const count = Math.round(sorted.length * x / 100);
+  const selected = new Set(sorted.slice(0, count));
+
+  selected.forEach(p => {
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", center.x);
+    line.setAttribute("y1", center.y);
+    line.setAttribute("x2", p.x);
+    line.setAttribute("y2", p.y);
+    line.setAttribute("class", "link");
+    svgB.appendChild(line);
+  });
+
+  points.forEach(p => {
+    svgB.appendChild(makePointCircle(p, selected.has(p)));
+  });
+}
+
+function makePointCircle(p, highlighted) {
+  const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  c.setAttribute("cx", p.x);
+  c.setAttribute("cy", p.y);
+  c.setAttribute("r", 6);
+  c.setAttribute("class", "point" + (highlighted ? " in-range" : ""));
+  c.onmousedown = () => draggingPoint = p;
+  return c;
+}
+
+function addPoint(evt) {
+  const rect = evt.target.getBoundingClientRect();
+  points.push({
+    x: evt.clientX - rect.left,
+    y: evt.clientY - rect.top
+  });
+  render();
+}
+
+[svgA, svgB].forEach(svg => {
+  svg.addEventListener("click", addPoint);
+});
+
+document.addEventListener("mousemove", e => {
+  if (!draggingPoint) return;
+  const rect = svgA.getBoundingClientRect();
+  draggingPoint.x = Math.max(0, Math.min(width, e.clientX - rect.left));
+  draggingPoint.y = Math.max(0, Math.min(height, e.clientY - rect.top));
+  render();
+});
+
+document.addEventListener("mouseup", () => draggingPoint = null);
+slider.addEventListener("input", render);
+
+render();
+</script>
+
+</body>
 </html>
